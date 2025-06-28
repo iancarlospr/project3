@@ -184,12 +184,12 @@ const HeroSection: React.FC = () => {
       {/* Centered Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center pointer-events-none">
         <h1 className="text-6xl md:text-8xl font-pirata text-amber-500 mb-8 drop-shadow-2xl animate-fade-in-up">
-          Chart Your Course
+          Chart Your Adventure
         </h1>
         <p className="text-xl md:text-2xl text-amber-100 font-crimson mb-12 leading-relaxed max-w-3xl mx-auto animate-fade-in-up animation-delay-300">
           Embark on extraordinary adventures across the Caribbean seas and 
           America's eastern shores. Discover hidden treasures, pristine waters, 
-          and unforgettable experiences with your seasoned guide.
+          and unforgettable experiences.
         </p>
         <button 
           onClick={scrollToContact}
