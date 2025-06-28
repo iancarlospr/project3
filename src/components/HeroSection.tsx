@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Waves, Anchor } from 'lucide-react';
 
-interface Ripple {
+interface Ping {
   id: number;
   x: number;
   y: number;
@@ -9,50 +9,139 @@ interface Ripple {
 }
 
 const HeroSection: React.FC = () => {
-  const [ripples, setRipples] = useState<Ripple[]>([]);
+  const [pings, setPings] = useState<Ping[]>([]);
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [isInHero, setIsInHero] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const rippleIdRef = useRef(0);
+  const pingIdRef = useRef(0);
+  const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const lastPingTimeRef = useRef(0);
 
-  const createRipple = (e: React.MouseEvent<HTMLElement>) => {
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const createPing = useCallback((x: number, y: number) => {
+    const now = Date.now();
+    
+    // Prevent too frequent pings (minimum 800ms between pings)
+    if (now - lastPingTimeRef.current < 800) {
+      return;
+    }
+    
+    lastPingTimeRef.current = now;
+
+    const newPing: Ping = {
+      id: pingIdRef.current++,
+      x,
+      y,
+      timestamp: now
+    };
+
+    setPings(prev => [...prev, newPing]);
+
+    // Remove ping after animation completes
+    setTimeout(() => {
+      setPings(prev => prev.filter(ping => ping.id !== newPing.id));
+    }, 2200);
+  }, []);
+
+  const updateCursorPosition = useCallback((e: React.MouseEvent<HTMLElement>) => {
     if (!sectionRef.current) return;
 
     const rect = sectionRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    const newRipple: Ripple = {
-      id: rippleIdRef.current++,
-      x,
-      y,
-      timestamp: Date.now()
+    // Only update if position actually changed significantly
+    if (Math.abs(x - cursorPosition.x) > 5 || Math.abs(y - cursorPosition.y) > 5) {
+      setCursorPosition({ x, y });
+    }
+  }, [cursorPosition.x, cursorPosition.y]);
+
+  const startPinging = useCallback(() => {
+    if (pingIntervalRef.current) {
+      clearInterval(pingIntervalRef.current);
+    }
+
+    // Create initial ping immediately
+    createPing(cursorPosition.x, cursorPosition.y);
+
+    // Then ping every 1.2 seconds
+    pingIntervalRef.current = setInterval(() => {
+      createPing(cursorPosition.x, cursorPosition.y);
+    }, 1200);
+  }, [cursorPosition.x, cursorPosition.y, createPing]);
+
+  const stopPinging = useCallback(() => {
+    if (pingIntervalRef.current) {
+      clearInterval(pingIntervalRef.current);
+      pingIntervalRef.current = null;
+    }
+  }, []);
+
+  const handleMouseEnter = useCallback(() => {
+    setIsInHero(true);
+    startPinging();
+  }, [startPinging]);
+
+  const handleMouseLeave = useCallback(() => {
+    setIsInHero(false);
+    stopPinging();
+  }, [stopPinging]);
+
+  // Update ping interval when cursor position changes significantly
+  useEffect(() => {
+    if (isInHero) {
+      // Debounce the restart to avoid too frequent restarts
+      const timeoutId = setTimeout(() => {
+        startPinging();
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [cursorPosition, isInHero, startPinging]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      stopPinging();
     };
+  }, [stopPinging]);
 
-    setRipples(prev => [...prev, newRipple]);
+  // Clean up old pings periodically
+  useEffect(() => {
+    const cleanupInterval = setInterval(() => {
+      const now = Date.now();
+      setPings(prev => prev.filter(ping => now - ping.timestamp < 3000));
+    }, 1000);
 
-    // Remove ripple after animation completes
-    setTimeout(() => {
-      setRipples(prev => prev.filter(ripple => ripple.id !== newRipple.id));
-    }, 1500);
-  };
+    return () => clearInterval(cleanupInterval);
+  }, []);
 
   return (
     <section 
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden cursor-crosshair"
-      onMouseMove={createRipple}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      onMouseMove={updateCursorPosition}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      {/* Ripple Effects */}
-      {ripples.map((ripple) => (
+      {/* Radar Ping Effects */}
+      {pings.map((ping) => (
         <div
-          key={ripple.id}
-          className="absolute pointer-events-none"
+          key={ping.id}
+          className="absolute pointer-events-none z-40"
           style={{
-            left: ripple.x,
-            top: ripple.y,
+            left: ping.x,
+            top: ping.y,
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <div className="ripple-circle"></div>
+          <div className="radar-ping"></div>
         </div>
       ))}
 
@@ -102,7 +191,10 @@ const HeroSection: React.FC = () => {
           America's eastern shores. Discover hidden treasures, pristine waters, 
           and unforgettable experiences with your seasoned guide.
         </p>
-        <button className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-900 font-bold py-6 px-12 rounded-full text-xl transition-all duration-300 transform hover:scale-110 shadow-2xl animate-fade-in-up animation-delay-600 hover:shadow-amber-500/25 pointer-events-auto">
+        <button 
+          onClick={scrollToContact}
+          className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-900 font-bold py-6 px-12 rounded-full text-xl transition-all duration-300 transform hover:scale-110 shadow-2xl animate-fade-in-up animation-delay-600 hover:shadow-amber-500/25 pointer-events-auto cursor-pointer"
+        >
           Begin Your Adventure
         </button>
       </div>

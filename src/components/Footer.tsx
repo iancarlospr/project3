@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, Mail, Phone, MapPin, Anchor } from 'lucide-react';
+import { Compass, Mail, MapPin, Anchor } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
@@ -42,10 +42,6 @@ const Footer: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-amber-500" />
                 <span className="text-amber-100 font-crimson">michael@wanderingwithmichael.com</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-amber-500" />
-                <span className="text-amber-100 font-crimson">(555) 123-SAIL</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="h-5 w-5 text-amber-500" />

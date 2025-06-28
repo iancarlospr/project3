@@ -2,6 +2,13 @@ import React from 'react';
 import { MapPin, Star } from 'lucide-react';
 
 const FeaturedDestinations: React.FC = () => {
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const destinations = [
     {
       id: 1,
@@ -87,7 +94,10 @@ const FeaturedDestinations: React.FC = () => {
                   ))}
                 </div>
 
-                <button className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-900 font-bold py-3 px-6 rounded-full transition-all duration-300 transform group-hover:scale-105">
+                <button 
+                  onClick={scrollToContact}
+                  className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-900 font-bold py-3 px-6 rounded-full transition-all duration-300 transform group-hover:scale-105 cursor-pointer"
+                >
                   Explore Region
                 </button>
               </div>

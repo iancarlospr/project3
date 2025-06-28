@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, Calendar, Users, DollarSign, MessageSquare } from 'lucide-react';
+import { Mail, Calendar, Users, DollarSign, MessageSquare, AlertTriangle } from 'lucide-react';
 
 interface FormData {
   name: string;
@@ -26,6 +26,7 @@ const ContactForm: React.FC = () => {
 
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
   const experiences = [
     'Sunset Treasure Hunt',
@@ -69,23 +70,19 @@ const ContactForm: React.FC = () => {
 
     setIsSubmitting(true);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      experience: '',
-      travelDates: '',
-      groupSize: '',
-      budget: '',
-      specialRequests: ''
-    });
+    // Simulate form processing
+    await new Promise(resolve => setTimeout(resolve, 1500));
     
     setIsSubmitting(false);
-    alert('Ahoy! Your message has been sent. We\'ll chart a course back to you within 24 hours!');
+    setShowWarning(true);
+    
+    // Scroll to show the warning
+    setTimeout(() => {
+      const warningElement = document.getElementById('contact-warning');
+      if (warningElement) {
+        warningElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -118,6 +115,35 @@ const ContactForm: React.FC = () => {
             plan something extraordinary together.
           </p>
         </div>
+
+        {/* Warning Notification - Only shown after form submission */}
+        {showWarning && (
+          <div id="contact-warning" className="mb-8 bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/40 rounded-2xl p-6 backdrop-blur-sm animate-fade-in-up">
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0">
+                <AlertTriangle className="h-8 w-8 text-red-400 animate-pulse" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-pirata text-red-400 mb-2">
+                  ⚠️ Contact Form Notice
+                </h3>
+                <p className="text-red-200 font-crimson mb-3 leading-relaxed">
+                  Ahoy! Our automated message system is currently navigating rough digital seas. 
+                  For the fastest response and to secure your adventure, please contact Captain Michael directly:
+                </p>
+                <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
+                  <div className="flex items-center justify-center space-x-2 text-red-100 font-crimson">
+                    <Mail className="h-5 w-5 text-red-400" />
+                    <span><strong>Email:</strong> michael@wanderingwithmichael.com</span>
+                  </div>
+                  <p className="mt-3 text-red-200 italic text-center">
+                    🏴‍☠️ Your extraordinary adventure awaits! 🏴‍☠️
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="bg-slate-800/80 backdrop-blur-sm border border-amber-500/30 rounded-3xl p-8 md:p-12 shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -165,18 +191,15 @@ const ContactForm: React.FC = () => {
                 <label htmlFor="phone" className="block text-amber-300 font-crimson font-semibold mb-2">
                   Phone *
                 </label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-amber-500" />
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className={`w-full pl-12 pr-4 py-3 bg-slate-700/50 border ${errors.phone ? 'border-red-500' : 'border-amber-500/30'} rounded-lg text-amber-100 placeholder-amber-300/50 focus:outline-none focus:border-amber-500 transition-colors`}
-                    placeholder="(555) 123-4567"
-                  />
-                </div>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 bg-slate-700/50 border ${errors.phone ? 'border-red-500' : 'border-amber-500/30'} rounded-lg text-amber-100 placeholder-amber-300/50 focus:outline-none focus:border-amber-500 transition-colors`}
+                  placeholder="(555) 123-4567"
+                />
                 {errors.phone && <p className="text-red-400 text-sm mt-1 font-crimson">{errors.phone}</p>}
               </div>
 
@@ -290,8 +313,13 @@ const ContactForm: React.FC = () => {
                   isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
-                {isSubmitting ? 'Sending Message...' : 'Send Message'}
+                {isSubmitting ? 'Processing...' : 'Send Message'}
               </button>
+              {!showWarning && (
+                <p className="text-amber-300/70 font-crimson text-sm mt-3">
+                  Form data will be displayed for reference only
+                </p>
+              )}
             </div>
           </form>
         </div>

@@ -2,70 +2,71 @@ import React from 'react';
 import { Clock, Users, Star, Compass } from 'lucide-react';
 
 const CuratedExperiences: React.FC = () => {
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const experiences = [
     {
       id: 1,
       title: 'Sunset Treasure Hunt',
-      image: 'https://images.pexels.com/photos/1174732/pexels-photo-1174732.jpeg',
-      duration: '4 hours',
-      difficulty: 'Easy',
+      image: 'https://images.pexels.com/photos/2792043/pexels-photo-2792043.jpeg',
+      duration: '3 hours',
       groupSize: '2-8 people',
-      price: '$149',
+      price: '$749',
       highlights: ['Golden hour photography', 'Hidden beach discovery', 'Local legends'],
       description: 'Follow ancient maps to discover secluded beaches as the sun paints the Caribbean sky.'
     },
     {
       id: 2,
       title: 'Caribbean Reef Explorer',
-      image: 'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg',
+      image: 'https://images.pexels.com/photos/32279568/pexels-photo-32279568.jpeg',
       duration: '6 hours',
-      difficulty: 'Moderate',
       groupSize: '4-12 people',
-      price: '$199',
+      price: '$1,299',
       highlights: ['Coral reef snorkeling', 'Marine life encounters', 'Underwater photography'],
       description: 'Dive into crystal waters to explore vibrant coral reefs teeming with tropical marine life.'
     },
     {
       id: 3,
       title: 'Historic Harbor Adventure',
-      image: 'https://images.pexels.com/photos/2157404/pexels-photo-2157404.jpeg',
-      duration: '5 hours',
-      difficulty: 'Easy',
+      image: 'https://images.pexels.com/photos/7981718/pexels-photo-7981718.jpeg',
+      duration: '4 hours',
       groupSize: '2-10 people',
-      price: '$129',
+      price: '$329',
       highlights: ['Colonial history', 'Maritime museums', 'Traditional sailing'],
       description: 'Step back in time exploring historic ports and learning tales of maritime adventures.'
     },
     {
       id: 4,
       title: 'Island Hopping Expedition',
-      image: 'https://images.pexels.com/photos/1450353/pexels-photo-1450353.jpeg',
+      image: 'https://images.pexels.com/photos/1450355/pexels-photo-1450355.jpeg',
       duration: '8 hours',
-      difficulty: 'Moderate',
       groupSize: '6-15 people',
-      price: '$279',
+      price: '$2,079',
       highlights: ['Multiple islands', 'Local cuisine', 'Cultural immersion'],
       description: 'Discover multiple islands in one epic day, each with unique character and hidden treasures.'
     },
     {
       id: 5,
       title: 'Lighthouse Keeper\'s Tale',
-      image: 'https://images.pexels.com/photos/1174732/pexels-photo-1174732.jpeg',
+      image: 'https://images.pexels.com/photos/15306388/pexels-photo-15306388.jpeg',
       duration: '3 hours',
-      difficulty: 'Easy',
       groupSize: '2-6 people',
-      price: '$99',
+      price: '$299',
       highlights: ['Historic lighthouses', 'Keeper stories', 'Coastal views'],
       description: 'Climb historic lighthouses and hear fascinating tales of the brave keepers who guided ships to safety.'
     },
     {
       id: 6,
       title: 'Pirate\'s Legacy Tour',
-      image: 'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg',
+      image: 'https://images.pexels.com/photos/37730/sunset-boat-sea-ship-37730.jpeg',
       duration: '7 hours',
-      difficulty: 'Challenging',
       groupSize: '4-8 people',
-      price: '$229',
+      price: '$2,529',
       highlights: ['Pirate history', 'Treasure hunting', 'Cave exploration'],
       description: 'Follow in the footsteps of legendary pirates, exploring hidden caves and searching for lost treasures.'
     }
@@ -153,7 +154,10 @@ const CuratedExperiences: React.FC = () => {
                   </div>
                 </div>
 
-                <button className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-900 font-bold py-3 px-6 rounded-full transition-all duration-300 transform group-hover:scale-105">
+                <button 
+                  onClick={scrollToContact}
+                  className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-900 font-bold py-3 px-6 rounded-full transition-all duration-300 transform group-hover:scale-105 cursor-pointer"
+                >
                   Reserve Your Adventure
                 </button>
               </div>
