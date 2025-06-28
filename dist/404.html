@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+  <script>
+    // Get the current path
+    var path = window.location.pathname;
+    // Remove the repository name from the path if it exists
+    var repoName = "/project3"; // Replace with your repository name
+    if (path.startsWith(repoName)) {
+      path = path.substring(repoName.length);
+    }
+    // Redirect to the root of the application
+    window.location.replace(repoName + '/#' + path);
+  </script>
+</head>
+<body>
+  <p>If you are not redirected automatically, follow this <a href="/project3/">link</a>.</p>
+</body>
+</html>
