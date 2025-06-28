@@ -1,0 +1,24 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="compassGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Outer compass ring -->
+  <circle cx="16" cy="16" r="15" fill="none" stroke="#d97706" stroke-width="2"/>
+  
+  <!-- Inner compass circle -->
+  <circle cx="16" cy="16" r="12" fill="url(#compassGradient)" opacity="0.8"/>
+  
+  <!-- Compass needle -->
+  <path d="M16,4 L18,14 L16,16 L14,14 Z" fill="#1e293b"/>
+  <path d="M16,28 L14,18 L16,16 L18,18 Z" fill="#64748b"/>
+  
+  <!-- Center dot -->
+  <circle cx="16" cy="16" r="2" fill="#1e293b"/>
+  
+  <!-- Cardinal directions -->
+  <text x="16" y="8" text-anchor="middle" font-family="serif" font-size="6" fill="#1e293b" font-weight="bold">N</text>
+</svg>
